@@ -1,8 +1,8 @@
 # Dev Lab QUEBEC
-#
-# As an individual developer
-# I want to demonstrate a full stack data round trip
-# So that I am qualified to work on a capstone dev team (and get an awesome job)
+
+### As an individual developer
+### I want to demonstrate a full stack data round trip
+### So that I am qualified to work on a capstone dev team (and get an awesome job)
 
 - From scratch, create a web-based MVC Single Page Application (SPA)
 - Required technology stack: Node.js, Express.js, MongoDB, RestfulAPI 
