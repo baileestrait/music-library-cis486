@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Student Manager</title>
+    <title>Music Library</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -24,10 +24,10 @@
             background-color: #fff3cd !important;
             border-color: #ffc107 !important;
         }
-        .student-card {
+        .song-card {
             transition: all 0.2s;
         }
-        .student-card:hover {
+        .song-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -49,8 +49,7 @@
     <div class="container mt-5">
         <div class="row mb-4">
             <div class="col-12">
-                <h1 class="text-center mb-3">🚀 Advanced Student Manager</h1>
-                <p class="text-center text-muted">Click on any field to edit directly! Watch the magic happen ✨</p>
+                <h1 class="text-center mb-3">✨🎵 Your Music Library 🎶✨</h1>
             </div>
         </div>
         
@@ -66,7 +65,7 @@
                         <button class="btn btn-danger" onclick="cleanupDatabase()">
                             <i class="bi bi-trash"></i> Cleanup Database
                         </button>
-                        <button class="btn btn-light" onclick="loadStudents()">
+                        <button class="btn btn-light" onclick="loadSongs()">
                             <i class="bi bi-arrow-clockwise"></i> Refresh
                         </button>
                     </div>
@@ -74,30 +73,34 @@
             </div>
         </div>
 
-        <!-- Add Student Section -->
+        <!-- Add Song Section -->
         <div class="row mb-4">
             <div class="col-md-8 mx-auto">
                 <div class="card border-success">
                     <div class="card-header bg-success text-white">
-                        <h5 class="mb-0"><i class="bi bi-person-plus"></i> Add New Student</h5>
+                        <h5 class="mb-0"> Add New Song!</h5>
                     </div>
                     <div class="card-body">
-                        <form id="addStudentForm" class="row g-3">
+                        <form id="addSongForm" class="row g-3">
                             <div class="col-md-4">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" required>
+                                <label for="songTitle" class="form-label">Song Title</label>
+                                <input type="text" class="form-control" id="songTitle" required value="asdf">
                             </div>
                             <div class="col-md-3">
-                                <label for="age" class="form-label">Age</label>
-                                <input type="number" class="form-control" id="age" min="16" max="100" required>
+                                <label for="artist" class="form-label">Artist</label>
+                                <input type="text" class="form-control" id="artist" required value="asdf">
                             </div>
                             <div class="col-md-3">
-                                <label for="grade" class="form-label">Grade</label>
-                                <input type="text" class="form-control" id="grade" placeholder="A, B+, C, etc." required>
+                                <label for="year" class="form-label">Year</label>
+                                <input type="number" class="form-control" id="year" min="1000" max="2026" required value="2002">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="genre" class="form-label">Genre</label>
+                                <input type="text" class="form-control" id="genre" required value="asdf">
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
                                 <button type="submit" class="btn btn-success w-100">
-                                    <i class="bi bi-plus-circle"></i> Add
+                                    <i class="bi bi-plus-circle">Add</i> 
                                 </button>
                             </div>
                         </form>
@@ -106,19 +109,19 @@
             </div>
         </div>
 
-        <!-- Students List -->
+        <!-- Song List -->
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="bi bi-people"></i> Students List</h5>
-                        <div class="click-hint">💡 Click on any field to edit instantly!</div>
+                        <h5 class="mb-0"></i> Song List</h5>
+                        <div class="click-hint">Click on any field to edit instantly!</div>
                     </div>
                     <div class="card-body">
-                        <div id="studentsList">
+                        <div id="songList">
                             <div class="text-center text-muted py-4">
                                 <i class="bi bi-arrow-up-circle fs-1"></i>
-                                <p>Click "Seed Database" to load sample students, then try inline editing!</p>
+                                <p>Click "Seed Database" to load sample songs, then try inline editing!</p>
                             </div>
                         </div>
                     </div>
@@ -161,90 +164,100 @@
             }, 2000);
         }
 
-        // CREATE - Add new student
-        document.getElementById('addStudentForm').addEventListener('submit', async (e) => {
+        // CREATE - Add new song
+        document.getElementById('addSongForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const student = {
-                name: document.getElementById('name').value,
-                age: parseInt(document.getElementById('age').value),
-                grade: document.getElementById('grade').value
+            const song = {
+                songTitle: document.getElementById('songTitle').value,
+                artist: document.getElementById('artist').value,
+                year: parseInt(document.getElementById('year').value),
+                genre: document.getElementById('genre').value
             };
 
+            console.log(song); 
+
             try {
-                const response = await fetch('/api/students', {
+                const response = await fetch('/api/songs', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(student)
+                    body: JSON.stringify(song)
                 });
 
                 const result = await response.json();
-                
+                console.log(result);
                 if (response.ok) {
-                    showMessage(`✅ Student "${student.name}" added successfully!`, 'success');
-                    document.getElementById('addStudentForm').reset();
-                    loadStudents();
+                    showMessage(`Song "${song.songTitle}" added successfully!`, 'success');
+                    document.getElementById('addSongForm').reset();
+                    // loadSongs();
                 } else {
-                    showMessage(`❌ Error: ${result.error}`, 'danger');
+                    showMessage(`Error: ${result.error}`, 'danger');
                 }
             } catch (error) {
-                showMessage(`❌ Network error: ${error.message}`, 'danger');
+                showMessage(`Network error: ${error.message}`, 'danger');
             }
         });
 
-        // READ - Load all students
-        async function loadStudents() {
+        // READ - Load all songs
+        async function loadSongs() {
             try {
-                const response = await fetch('/api/students');
-                const students = await response.json();
+                const response = await fetch('/api/songs');
+                const songs = await response.json();
 
-                const studentsList = document.getElementById('studentsList');
+                const songsList = document.getElementById('songsList');
                 
-                if (students.length === 0) {
-                    studentsList.innerHTML = `
+                if (songs.length === 0) {
+                    songsList.innerHTML = `
                         <div class="text-center text-muted py-4">
                             <i class="bi bi-person-x fs-1"></i>
-                            <p>No students found. Try seeding the database!</p>
+                            <p>No songs found. Try seeding the database!</p>
                         </div>
                     `;
                     return;
                 }
 
-                studentsList.innerHTML = students.map(student => `
-                    <div class="card mb-3 student-card" data-student-id="${student._id}">
+                songsList.innerHTML = songs.map(song => `
+                    <div class="card mb-3 song-card" data-song-id="${song._id}">
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-3">
-                                    <strong>Name:</strong>
+                                    <strong>Title:</strong>
                                     <div class="editable-field" 
-                                         data-field="name" 
-                                         data-student-id="${student._id}"
-                                         title="Click to edit name">${student.name}</div>
+                                         data-field="songTitle" 
+                                         data-song-id="${song._id}"
+                                         title="Click to edit Title">${song.songTitle}</div>
+                                </div>
+                                   <div class="col-md-3">
+                                    <strong>Artist:</strong>
+                                    <div class="editable-field" 
+                                         data-field="artist" 
+                                         data-song-id="${song._id}"
+                                         title="Click to edit Artist">${song.artist}</div>
                                 </div>
                                 <div class="col-md-2">
-                                    <strong>Age:</strong>
+                                    <strong>Year:</strong>
                                     <div class="editable-field" 
-                                         data-field="age" 
-                                         data-student-id="${student._id}"
-                                         title="Click to edit age">${student.age}</div>
+                                         data-field="year" 
+                                         data-song-id="${song._id}"
+                                         title="Click to edit age">${song.year}</div>
                                 </div>
                                 <div class="col-md-2">
-                                    <strong>Grade:</strong>
+                                    <strong>Genre:</strong>
                                     <div class="editable-field" 
-                                         data-field="grade" 
-                                         data-student-id="${student._id}"
-                                         title="Click to edit grade">${student.grade}</div>
+                                         data-field="genre" 
+                                         data-song-id="${song._id}"
+                                         title="Click to edit Genre">${song.genre}</div>
                                 </div>
                                 <div class="col-md-3">
                                     <small class="text-muted">
-                                        <i class="bi bi-tag"></i> ID: ${student._id}
+                                        <i class="bi bi-tag"></i> ID: ${song._id}
                                     </small>
                                 </div>
                                 <div class="col-md-2 text-end">
                                     <button class="btn btn-outline-danger btn-sm" 
-                                            onclick="deleteStudent('${student._id}', '${student.name}')">
+                                            onclick="deletesong('${song._id}', '${song.songTitle}')">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
                                 </div>
@@ -256,9 +269,9 @@
                 // Add click event listeners for inline editing
                 addInlineEditListeners();
                 
-                showMessage(`📋 Loaded ${students.length} students. Click any field to edit!`, 'info');
+                showMessage(`Loaded ${songs.length} songs. Click any field to edit!`, 'info');
             } catch (error) {
-                showMessage(`❌ Error loading students: ${error.message}`, 'danger');
+                showMessage(`Error loading songs: ${error.message}`, 'danger');
             }
         }
 
@@ -270,17 +283,17 @@
                     
                     const currentValue = this.textContent;
                     const fieldType = this.getAttribute('data-field');
-                    const studentId = this.getAttribute('data-student-id');
+                    const songId = this.getAttribute('data-song-id');
                     
                     // Create input element
                     const input = document.createElement('input');
-                    input.type = fieldType === 'age' ? 'number' : 'text';
+                    input.type = fieldType === 'year' ? 'number' : 'text';
                     input.value = currentValue;
                     input.className = 'form-control form-control-sm';
                     
-                    if (fieldType === 'age') {
-                        input.min = '16';
-                        input.max = '100';
+                    if (fieldType === 'year') {
+                        input.min = '1000';
+                        input.max = '2026';
                     }
                     
                     // Add styling for editing state
@@ -299,7 +312,7 @@
                         if (!newValue) {
                             this.textContent = currentValue;
                             this.classList.remove('editing');
-                            showMessage('❌ Value cannot be empty', 'warning');
+                            showMessage('Value cannot be empty', 'warning');
                             return;
                         }
                         
@@ -310,7 +323,7 @@
                         }
                         
                         // Update in database
-                        const success = await updateStudentField(studentId, fieldType, newValue);
+                        const success = await updatesongField(songId, fieldType, newValue);
                         
                         if (success) {
                             this.textContent = newValue;
@@ -337,12 +350,12 @@
         }
 
         // UPDATE - Update single field
-        async function updateStudentField(studentId, field, value) {
+        async function updatesongField(songId, field, value) {
             try {
                 const updateData = {};
-                updateData[field] = field === 'age' ? parseInt(value) : value;
+                updateData[field] = field === 'year' ? parseInt(value) : value;
 
-                const response = await fetch(`/api/students/${studentId}`, {
+                const response = await fetch(`/api/songs/${songId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -353,59 +366,59 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    showMessage(`✅ ${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!`, 'success');
+                    showMessage(`${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!`, 'success');
                     return true;
                 } else {
-                    showMessage(`❌ Error: ${result.error}`, 'danger');
+                    showMessage(`Error: ${result.error}`, 'danger');
                     return false;
                 }
             } catch (error) {
-                showMessage(`❌ Network error: ${error.message}`, 'danger');
+                showMessage(`Network error: ${error.message}`, 'danger');
                 return false;
             }
         }
 
-        // DELETE - Delete student
-        async function deleteStudent(id, name) {
-            if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+        // DELETE - Delete song
+        async function deleteSong(id, title) {
+            if (!confirm(`Are you sure you want to delete "${title}"?`)) {
                 return;
             }
 
             try {
-                const response = await fetch(`/api/students/${id}`, {
+                const response = await fetch(`/api/songs/${id}`, {
                     method: 'DELETE'
                 });
 
                 const result = await response.json();
                 
                 if (response.ok) {
-                    showMessage(`✅ Student "${name}" deleted successfully!`, 'success');
+                    showMessage(`song "${title}" deleted successfully!`, 'success');
                     
                     // Animate removal
-                    const studentCard = document.querySelector(`[data-student-id="${id}"]`);
-                    if (studentCard) {
-                        studentCard.style.opacity = '0';
-                        studentCard.style.transform = 'translateX(-100%)';
+                    const songCard = document.querySelector(`[data-song-id="${id}"]`);
+                    if (songCard) {
+                        songCard.style.opacity = '0';
+                        songCard.style.transform = 'translateX(-100%)';
                         setTimeout(() => {
-                            studentCard.remove();
+                            songCard.remove();
                         }, 300);
                     }
                 } else {
-                    showMessage(`❌ Error: ${result.error}`, 'danger');
+                    showMessage(`Error: ${result.error}`, 'danger');
                 }
             } catch (error) {
-                showMessage(`❌ Network error: ${error.message}`, 'danger');
+                showMessage(`Network error: ${error.message}`, 'danger');
             }
         }
 
         // Seed Database
         async function seedDatabase() {
-            if (!confirm('This will add sample students to the database. Continue?')) {
+            if (!confirm('This will add sample songs to the database. Continue?')) {
                 return;
             }
 
             try {
-                showMessage('🌱 Seeding database...', 'info');
+                showMessage('Seeding database...', 'info');
                 const response = await fetch('/api/seed', {
                     method: 'POST'
                 });
@@ -413,24 +426,24 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    showMessage(`✅ ${result.message}`, 'success');
-                    loadStudents();
+                    showMessage(`${result.message}`, 'success');
+                    loadsongs();
                 } else {
-                    showMessage(`❌ Error: ${result.error}`, 'danger');
+                    showMessage(`Error: ${result.error}`, 'danger');
                 }
             } catch (error) {
-                showMessage(`❌ Network error: ${error.message}`, 'danger');
+                showMessage(`Network error: ${error.message}`, 'danger');
             }
         }
 
         // Cleanup Database
         async function cleanupDatabase() {
-            if (!confirm('⚠️ This will DELETE ALL students from the database. Are you sure?')) {
+            if (!confirm('This will DELETE ALL songs from the database. Are you sure?')) {
                 return;
             }
 
             try {
-                showMessage('🧹 Cleaning database...', 'info');
+                showMessage('Cleaning database...', 'info');
                 const response = await fetch('/api/cleanup', {
                     method: 'DELETE'
                 });
@@ -438,18 +451,18 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    showMessage(`✅ ${result.message}`, 'success');
-                    loadStudents();
+                    showMessage(`${result.message}`, 'success');
+                    loadsongs();
                 } else {
-                    showMessage(`❌ Error: ${result.error}`, 'danger');
+                    showMessage(`Error: ${result.error}`, 'danger');
                 }
             } catch (error) {
-                showMessage(`❌ Network error: ${error.message}`, 'danger');
+                showMessage(`Network error: ${error.message}`, 'danger');
             }
         }
 
-        // Load students when page loads
-        window.addEventListener('load', loadStudents);
+        // Load songs when page loads
+        // window.addEventListener('load', loadSongs);
     </script>
 </body>
 </html>
