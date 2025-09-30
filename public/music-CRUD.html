@@ -58,16 +58,10 @@
             <div class="col-12">
                 <div class="card bg-primary text-white">
                     <div class="card-body text-center">
-                        <h5 class="card-title"><i class="bi bi-tools"></i> Database Management</h5>
-                        <button class="btn btn-success me-2" onclick="seedDatabase()">
-                            <i class="bi bi-database-add"></i> Seed Database
-                        </button>
-                        <button class="btn btn-danger" onclick="cleanupDatabase()">
-                            <i class="bi bi-trash"></i> Cleanup Database
-                        </button>
-                        <button class="btn btn-light" onclick="loadSongs()">
-                            <i class="bi bi-arrow-clockwise"></i> Refresh
-                        </button>
+                        <h5 class="card-title">Database Management</h5>
+                        <button class="btn btn-success me-2" onclick="seedDatabase()">Seed Database</button>
+                        <button class="btn btn-danger" onclick="cleanupDatabase()">Cleanup Database</button>
+                        <button class="btn btn-light" onclick="loadSongs()">Refresh</button>
                     </div>
                 </div>
             </div>
@@ -84,19 +78,19 @@
                         <form id="addSongForm" class="row g-3">
                             <div class="col-md-4">
                                 <label for="songTitle" class="form-label">Song Title</label>
-                                <input type="text" class="form-control" id="songTitle" required value="asdf">
+                                <input type="text" class="form-control" id="songTitle">
                             </div>
                             <div class="col-md-3">
                                 <label for="artist" class="form-label">Artist</label>
-                                <input type="text" class="form-control" id="artist" required value="asdf">
+                                <input type="text" class="form-control" id="artist" >
                             </div>
                             <div class="col-md-3">
                                 <label for="year" class="form-label">Year</label>
-                                <input type="number" class="form-control" id="year" min="1000" max="2026" required value="2002">
+                                <input type="number" class="form-control" id="year" min="1000" max="2026">
                             </div>
                             <div class="col-md-3">
                                 <label for="genre" class="form-label">Genre</label>
-                                <input type="text" class="form-control" id="genre" required value="asdf">
+                                <input type="text" class="form-control" id="genre">
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
                                 <button type="submit" class="btn btn-success w-100">
@@ -118,7 +112,7 @@
                         <div class="click-hint">Click on any field to edit instantly!</div>
                     </div>
                     <div class="card-body">
-                        <div id="songList">
+                        <div id="songsList">
                             <div class="text-center text-muted py-4">
                                 <i class="bi bi-arrow-up-circle fs-1"></i>
                                 <p>Click "Seed Database" to load sample songs, then try inline editing!</p>
@@ -191,7 +185,7 @@
                 if (response.ok) {
                     showMessage(`Song "${song.songTitle}" added successfully!`, 'success');
                     document.getElementById('addSongForm').reset();
-                    // loadSongs();
+                    loadSongs();
                 } else {
                     showMessage(`Error: ${result.error}`, 'danger');
                 }
@@ -323,7 +317,7 @@
                         }
                         
                         // Update in database
-                        const success = await updatesongField(songId, fieldType, newValue);
+                        const success = await updateSongField(songId, fieldType, newValue);
                         
                         if (success) {
                             this.textContent = newValue;
@@ -350,7 +344,7 @@
         }
 
         // UPDATE - Update single field
-        async function updatesongField(songId, field, value) {
+        async function updateSongField(songId, field, value) {
             try {
                 const updateData = {};
                 updateData[field] = field === 'year' ? parseInt(value) : value;
@@ -427,7 +421,7 @@
                 
                 if (response.ok) {
                     showMessage(`${result.message}`, 'success');
-                    loadsongs();
+                    loadSongs();
                 } else {
                     showMessage(`Error: ${result.error}`, 'danger');
                 }
@@ -452,7 +446,7 @@
                 
                 if (response.ok) {
                     showMessage(`${result.message}`, 'success');
-                    loadsongs();
+                    loadSongs();
                 } else {
                     showMessage(`Error: ${result.error}`, 'danger');
                 }
@@ -462,7 +456,7 @@
         }
 
         // Load songs when page loads
-        // window.addEventListener('load', loadSongs);
+        window.addEventListener('load', loadSongs);
     </script>
 </body>
 </html>
